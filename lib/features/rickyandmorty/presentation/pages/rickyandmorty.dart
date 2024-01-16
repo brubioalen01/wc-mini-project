@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:wcminiproj/core/dependency_injection/injection_container.dart';
+import 'package:wcminiproj/features/rickyandmorty/data/models/character_model.dart';
 import 'package:wcminiproj/features/rickyandmorty/presentation/bloc/rickyandmorty_bloc.dart';
+import 'package:wcminiproj/features/rickyandmorty/presentation/widgets/rickyandmorty_tile_grid_widget.dart';
 import 'package:wcminiproj/features/rickyandmorty/presentation/widgets/rickyandmorty_tile_widget.dart';
 
 class Rickyandmorty extends StatefulWidget {
@@ -13,6 +15,20 @@ class Rickyandmorty extends StatefulWidget {
 
 class _RickyandmortyState extends State<Rickyandmorty> {
   final RickyandmortyBloc bloc = RickyandmortyBloc(sl());
+  var page = 1;
+
+  final scrollController = ScrollController();
+  List<CharacterModel> characaters = [];
+
+  void setupController(context) {
+    scrollController.addListener(() {
+      if (scrollController.position.pixels ==
+          scrollController.position.maxScrollExtent) {
+        bloc.add(LoadMoreEvent(page));
+        page += 1;
+      }
+    });
+  }
 
   @override
   void initState() {
@@ -22,8 +38,11 @@ class _RickyandmortyState extends State<Rickyandmorty> {
 
   @override
   Widget build(BuildContext context) {
+    setupController(context);
     return BlocConsumer<RickyandmortyBloc, RickyandmortyState>(
       bloc: bloc,
+      listenWhen: (previous, current) => current is RickyandmortyActionState,
+      buildWhen: (previous, current) => current is! RickyandmortyActionState,
       listener: (context, state) {},
       builder: (context, state) {
         switch (state.runtimeType) {
@@ -35,16 +54,35 @@ class _RickyandmortyState extends State<Rickyandmorty> {
             );
           case const (RickyandmortySuccessState):
             final successState = state as RickyandmortySuccessState;
+            characaters.addAll(successState.characters);
             return Scaffold(
-              body: ListView.builder(
-                  itemCount: successState.characters.data?.characters.length,
-                  itemBuilder: ((context, index) {
-                    return RickyandmortyTileWidget(
-                      characterModel:
-                          successState.characters.data?.characters[index],
-                    );
-                  })),
+              body: MediaQuery.of(context).size.width <= 640
+                  ? ListView.builder(
+                      controller: scrollController,
+                      itemCount: characaters.length,
+                      itemBuilder: ((context, index) {
+                        if (index >= characaters.length) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        } else {
+                          return RickyandmortyTileWidget(
+                            characterModel: characaters[index],
+                          );
+                        }
+                      }))
+                  : GridView.builder(
+                      controller: scrollController,
+                      itemCount: characaters.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithMaxCrossAxisExtent(
+                              maxCrossAxisExtent: 300),
+                      itemBuilder: ((context, index) {
+                        return RickyandmortyTileGridWidget(
+                          characterModel: characaters[index],
+                        );
+                      })),
               appBar: AppBar(
+                backgroundColor: Colors.greenAccent,
                 title: const Text('Characters'),
               ),
             );
@@ -55,7 +93,7 @@ class _RickyandmortyState extends State<Rickyandmorty> {
               ),
             );
           default:
-            return const Placeholder();
+            return const Scaffold();
         }
       },
     );

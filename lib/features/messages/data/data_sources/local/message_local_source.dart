@@ -10,7 +10,7 @@ class MessageLocalSource {
 
   Future<void> addMessages(MessageEntity? message) async {
     if (message != null) {
-      messages.add(message);
+      messages.insert(0, message);
     }
   }
 

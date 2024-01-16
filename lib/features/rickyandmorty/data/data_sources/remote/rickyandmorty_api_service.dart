@@ -5,8 +5,9 @@ import 'package:wcminiproj/features/rickyandmorty/data/models/paginated_characte
 
 class RickyandmortyApiService {
   final dio = Dio();
-  Future<ApiResponse<PaginatedCharactersModel>> getAllCharacters() async {
-    final response = await dio.get('$baseUrl/character');
+  Future<ApiResponse<PaginatedCharactersModel>> getAllCharacters(
+      int? page) async {
+    final response = await dio.get('$baseUrl/character/?page=$page');
     if (response.statusCode == 200) {
       final formattedValue = PaginatedCharactersModel.fromJson(response.data);
       return ApiResponse<PaginatedCharactersModel>(data: formattedValue);

@@ -58,17 +58,8 @@ class _MessagesState extends State<Messages> {
                 child: const Icon(Icons.add_circle_rounded),
               ),
               appBar: AppBar(
-                title: const Text('Whitecloak Mini Project',
+                title: const Text('Messages',
                     style: TextStyle(color: Colors.white)),
-                actions: [
-                  IconButton(
-                    padding: EdgeInsets.zero,
-                    icon: const Icon(Icons.message),
-                    onPressed: () {
-                      messagesBloc.add(NavigateMessageToRickyAndMortyEvent());
-                    },
-                  ),
-                ],
               ),
               body: ListView.builder(
                   itemCount: successState.messages.length,
@@ -86,7 +77,7 @@ class _MessagesState extends State<Messages> {
               ),
             );
           default:
-            return const Placeholder();
+            return const Scaffold();
         }
       },
     );

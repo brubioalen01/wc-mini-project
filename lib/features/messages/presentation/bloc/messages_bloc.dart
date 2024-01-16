@@ -32,14 +32,14 @@ class MessagesBloc extends Bloc<MessagesEvent, MessagesState> {
   FutureOr<void> initialMessageEvent(
       InitialMessageEvent event, Emitter<MessagesState> emit) async {
     emit(MessagesLoadingState());
-    await Future.delayed(const Duration(seconds: 3));
+    await Future.delayed(const Duration(milliseconds: 30));
     emit(MessagesSuccessState(messages: await getAllMessagesUseCase()));
   }
 
   FutureOr<void> removeMessageEvent(
       RemoveMessageEvent event, Emitter<MessagesState> emit) async {
     emit(MessagesLoadingState());
-    await Future.delayed(const Duration(seconds: 1));
+    await Future.delayed(const Duration(milliseconds: 30));
     removeMessageUseCase(params: event.messageEntity);
     emit(MessagesSuccessState(messages: await getAllMessagesUseCase()));
   }
@@ -47,7 +47,7 @@ class MessagesBloc extends Bloc<MessagesEvent, MessagesState> {
   FutureOr<void> addMessageEvent(
       AddMessageEvent event, Emitter<MessagesState> emit) async {
     emit(MessagesLoadingState());
-    await Future.delayed(const Duration(seconds: 1));
+    await Future.delayed(const Duration(milliseconds: 30));
     addMessageUseCase(params: event.messageEntity);
     emit(MessagesSuccessState(messages: await getAllMessagesUseCase()));
   }

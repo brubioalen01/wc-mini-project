@@ -9,7 +9,7 @@ class RickyandmortyRepositoryImpl implements RickyandmortyRepository {
   RickyandmortyRepositoryImpl(this.rickyandmortyApiService);
 
   @override
-  Future<ApiResponse<PaginatedCharactersModel>> getAllCharacters() {
-    return rickyandmortyApiService.getAllCharacters();
+  Future<ApiResponse<PaginatedCharactersModel>> getAllCharacters(int? page) {
+    return rickyandmortyApiService.getAllCharacters(page);
   }
 }

@@ -31,6 +31,10 @@ class _MessageAddDialogState extends State<MessageAddDialog> {
         child: Column(children: [
           Container(
             margin: const EdgeInsets.all(20),
+            child: const Text('Add Message'),
+          ),
+          Container(
+            margin: const EdgeInsets.all(20),
             child: TextField(
               decoration: const InputDecoration(
                 labelText: 'Title',

@@ -4,13 +4,13 @@ import 'package:wcminiproj/features/rickyandmorty/data/models/paginated_characte
 import 'package:wcminiproj/features/rickyandmorty/domain/repository/rickyandmorty_repository.dart';
 
 class GetAllCharactersUseCase
-    implements UseCase<ApiResponse<PaginatedCharactersModel>, void> {
+    implements UseCase<ApiResponse<PaginatedCharactersModel>, int?> {
   final RickyandmortyRepository repository;
 
   GetAllCharactersUseCase(this.repository);
 
   @override
-  Future<ApiResponse<PaginatedCharactersModel>> call({void params}) {
-    return repository.getAllCharacters();
+  Future<ApiResponse<PaginatedCharactersModel>> call({int? params}) {
+    return repository.getAllCharacters(params);
   }
 }
